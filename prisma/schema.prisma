@@ -1,0 +1,202 @@
+generator client {
+  provider = "prisma-client"
+  output   = "../lib/generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+/// This table contains check constraints and requires additional setup for migrations. Visit https://pris.ly/d/check-constraints for more info.
+model achievements {
+  id                String           @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  student_name      String           @db.VarChar(150)
+  title             String           @db.VarChar(255)
+  description       String?
+  student_school    String?          @db.VarChar(255)
+  destination       String?          @db.VarChar(255)
+  subject           String?          @db.VarChar(150)
+  competition_name  String?          @db.VarChar(255)
+  competition_level String?          @db.VarChar(150)
+  achievement_type  achievement_type
+  year              Int?
+  image_url         String?
+  is_featured       Boolean          @default(false)
+  is_active         Boolean          @default(true)
+  display_order     Int              @default(0)
+  created_at        DateTime         @default(now()) @db.Timestamptz(6)
+  updated_at        DateTime         @default(now()) @db.Timestamptz(6)
+
+  @@index([is_active], map: "idx_achievements_active")
+  @@index([display_order], map: "idx_achievements_display_order")
+  @@index([is_featured], map: "idx_achievements_featured")
+  @@index([achievement_type], map: "idx_achievements_type")
+  @@index([year], map: "idx_achievements_year")
+}
+
+model company_profile {
+  id          String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  name        String   @db.VarChar(150)
+  tagline     String?  @db.VarChar(255)
+  description String?
+  history     String?
+  vision      String?
+  mission     String?
+  logo_url    String?
+  updated_at  DateTime @default(now()) @db.Timestamptz(6)
+}
+
+model contact_information {
+  id                String              @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  email             String?             @db.VarChar(255)
+  instagram_url     String?
+  facebook_url      String?
+  tiktok_url        String?
+  youtube_url       String?
+  updated_at        DateTime            @default(now()) @db.Timestamptz(6)
+  contact_locations contact_locations[]
+}
+
+/// This table contains check constraints and requires additional setup for migrations. Visit https://pris.ly/d/check-constraints for more info.
+model contact_locations {
+  id                     String              @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  contact_information_id String              @db.Uuid
+  label                  String?             @db.VarChar(100)
+  address                String
+  phone                  String?             @db.VarChar(30)
+  whatsapp               String?             @db.VarChar(30)
+  contact_person         String?             @db.VarChar(150)
+  google_maps_url        String?
+  is_active              Boolean             @default(true)
+  display_order          Int                 @default(0)
+  created_at             DateTime            @default(now()) @db.Timestamptz(6)
+  updated_at             DateTime            @default(now()) @db.Timestamptz(6)
+  contact_information    contact_information @relation(fields: [contact_information_id], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "contact_locations_contact_information_fk")
+
+  @@index([is_active], map: "idx_contact_locations_active")
+  @@index([contact_information_id], map: "idx_contact_locations_contact_information_id")
+  @@index([display_order], map: "idx_contact_locations_display_order")
+}
+
+/// This table contains check constraints and requires additional setup for migrations. Visit https://pris.ly/d/check-constraints for more info.
+model program_packages {
+  id            String     @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  program_id    String     @db.Uuid
+  name          String     @db.VarChar(150)
+  description   String?
+  price         Int
+  price_unit    price_unit
+  duration      String?    @db.VarChar(100)
+  is_active     Boolean    @default(true)
+  display_order Int        @default(0)
+  created_at    DateTime   @default(now()) @db.Timestamptz(6)
+  updated_at    DateTime   @default(now()) @db.Timestamptz(6)
+  programs      programs   @relation(fields: [program_id], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "program_packages_program_fk")
+
+  @@index([display_order], map: "idx_program_packages_display_order")
+  @@index([is_active], map: "idx_program_packages_is_active")
+  @@index([program_id], map: "idx_program_packages_program_id")
+}
+
+/// This table contains check constraints and requires additional setup for migrations. Visit https://pris.ly/d/check-constraints for more info.
+model programs {
+  id               String             @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  name             String             @db.VarChar(150)
+  slug             String             @unique @db.VarChar(180)
+  category         program_category
+  description      String?
+  image_url        String?
+  is_active        Boolean            @default(true)
+  display_order    Int                @default(0)
+  created_at       DateTime           @default(now()) @db.Timestamptz(6)
+  updated_at       DateTime           @default(now()) @db.Timestamptz(6)
+  program_packages program_packages[]
+}
+
+/// This table contains check constraints and requires additional setup for migrations. Visit https://pris.ly/d/check-constraints for more info.
+model tutor_educations {
+  id             String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  tutor_id       String   @db.Uuid
+  institution    String   @db.VarChar(255)
+  field_of_study String?  @db.VarChar(255)
+  start_year     Int?
+  end_year       Int?
+  description    String?
+  display_order  Int      @default(0)
+  created_at     DateTime @default(now()) @db.Timestamptz(6)
+  updated_at     DateTime @default(now()) @db.Timestamptz(6)
+  tutors         tutors   @relation(fields: [tutor_id], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "tutor_educations_tutor_fk")
+
+  @@index([tutor_id], map: "idx_tutor_educations_tutor_id")
+}
+
+/// This table contains check constraints and requires additional setup for migrations. Visit https://pris.ly/d/check-constraints for more info.
+model tutor_experiences {
+  id            String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  tutor_id      String   @db.Uuid
+  organization  String   @db.VarChar(255)
+  position      String?  @db.VarChar(150)
+  start_year    Int?
+  end_year      Int?
+  description   String?
+  display_order Int      @default(0)
+  created_at    DateTime @default(now()) @db.Timestamptz(6)
+  updated_at    DateTime @default(now()) @db.Timestamptz(6)
+  tutors        tutors   @relation(fields: [tutor_id], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "tutor_experiences_tutor_fk")
+
+  @@index([tutor_id], map: "idx_tutor_experiences_tutor_id")
+}
+
+/// This table contains check constraints and requires additional setup for migrations. Visit https://pris.ly/d/check-constraints for more info.
+model tutors {
+  id                String              @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  name              String              @db.VarChar(150)
+  slug              String              @unique @db.VarChar(180)
+  title             String?             @db.VarChar(100)
+  photo_url         String?
+  specialization    String?             @db.VarChar(255)
+  bio               String?
+  is_active         Boolean             @default(true)
+  display_order     Int                 @default(0)
+  created_at        DateTime            @default(now()) @db.Timestamptz(6)
+  updated_at        DateTime            @default(now()) @db.Timestamptz(6)
+  tutor_educations  tutor_educations[]
+  tutor_experiences tutor_experiences[]
+}
+
+model users {
+  id            String    @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  name          String    @db.VarChar(100)
+  email         String    @unique @db.VarChar(255)
+  password_hash String    @db.VarChar(255)
+  role          user_role @default(ADMIN)
+  created_at    DateTime  @default(now()) @db.Timestamptz(6)
+  updated_at    DateTime  @default(now()) @db.Timestamptz(6)
+}
+
+enum achievement_type {
+  COMPETITION
+  ADMISSION
+  ACADEMIC
+  OTHER
+}
+
+enum price_unit {
+  PER_SEMESTER
+  PER_PERIODE
+  PER_BULAN
+  PER_PERTEMUAN
+  SEKALI_BAYAR
+}
+
+enum program_category {
+  REGULER
+  OLIMPIADE
+  PROGRAM_TAHUNAN
+  LAINNYA
+}
+
+enum user_role {
+  ADMIN
+  EDITOR
+}
