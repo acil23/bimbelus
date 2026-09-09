@@ -5,6 +5,7 @@ import {
   getActivePrograms,
 } from "@/modules/programs/program.service";
 import { createProgramSchema } from "@/modules/programs/program.validation";
+import { requireAdmin } from "@/lib/auth/current-user";
 
 export async function GET() {
   try {
@@ -18,6 +19,8 @@ export async function GET() {
 
 export async function POST(request: Request) {
   try {
+    await requireAdmin();
+    
     const body: unknown = await request.json();
 
     const validatedData = createProgramSchema.parse(body);

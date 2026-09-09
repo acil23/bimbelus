@@ -6,6 +6,7 @@ import {
 } from "@/modules/company/company.service";
 import { updateCompanyProfileSchema } from "@/modules/company/company.validation";
 import { ApiError } from "@/lib/errors/api-error";
+import { requireAdmin } from "@/lib/auth/current-user";
 
 export async function GET() {
   try {
@@ -27,6 +28,7 @@ export async function GET() {
 
 export async function PATCH(request: Request) {
   try {
+    await requireAdmin();
     const body: unknown = await request.json();
 
     const validatedData =

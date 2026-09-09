@@ -5,6 +5,7 @@ import {
   getActiveAchievements,
 } from "@/modules/achievements/achievement.service";
 import { createAchievementSchema } from "@/modules/achievements/achievement.validation";
+import { requireAdmin } from "@/lib/auth/current-user";
 
 export async function GET() {
   try {
@@ -18,6 +19,7 @@ export async function GET() {
 
 export async function POST(request: Request) {
   try {
+    await requireAdmin();
     const body: unknown = await request.json();
 
     const validatedData = createAchievementSchema.parse(body);

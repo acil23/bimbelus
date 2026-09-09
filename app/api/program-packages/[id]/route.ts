@@ -9,6 +9,7 @@ import {
   updatePackageSchema,
 } from "@/modules/programs/package.validation";
 import { ApiError } from "@/lib/errors/api-error";
+import { requireAdmin } from "@/lib/auth/current-user";
 
 type RouteContext = {
   params: Promise<{
@@ -21,6 +22,7 @@ export async function PATCH(
   { params }: RouteContext,
 ) {
   try {
+    await requireAdmin();
     const { id } = await params;
 
     packageIdSchema.parse(id);
@@ -54,6 +56,7 @@ export async function DELETE(
   { params }: RouteContext,
 ) {
   try {
+    await requireAdmin();
     const { id } = await params;
 
     packageIdSchema.parse(id);

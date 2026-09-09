@@ -3,6 +3,7 @@ import { successResponse } from "@/lib/api/response";
 import { createExperience } from "@/modules/tutors/experience.service";
 import { createExperienceSchema } from "@/modules/tutors/experience.validation";
 import { tutorIdSchema } from "@/modules/tutors/tutor.validation";
+import { requireAdmin } from "@/lib/auth/current-user";
 
 type RouteContext = {
   params: Promise<{
@@ -15,6 +16,7 @@ export async function POST(
   { params }: RouteContext,
 ) {
   try {
+    await requireAdmin();
     const { id } = await params;
 
     tutorIdSchema.parse(id);

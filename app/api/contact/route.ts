@@ -6,6 +6,7 @@ import {
   updateContactInformation,
 } from "@/modules/contact/contact.service";
 import { updateContactInformationSchema } from "@/modules/contact/contact.validation";
+import { requireAdmin } from "@/lib/auth/current-user";
 
 export async function GET() {
   try {
@@ -27,6 +28,7 @@ export async function GET() {
 
 export async function PATCH(request: Request) {
   try {
+    await requireAdmin();
     const body: unknown = await request.json();
 
     const validatedData =

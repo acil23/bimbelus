@@ -10,6 +10,7 @@ import {
   achievementIdSchema,
   updateAchievementSchema,
 } from "@/modules/achievements/achievement.validation";
+import { requireAdmin } from "@/lib/auth/current-user";
 
 type RouteContext = {
   params: Promise<{
@@ -47,6 +48,7 @@ export async function PATCH(
   { params }: RouteContext,
 ) {
   try {
+    await requireAdmin();
     const { id } = await params;
 
     achievementIdSchema.parse(id);
@@ -83,6 +85,7 @@ export async function DELETE(
   { params }: RouteContext,
 ) {
   try {
+    await requireAdmin();
     const { id } = await params;
 
     achievementIdSchema.parse(id);
