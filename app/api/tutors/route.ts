@@ -6,6 +6,7 @@ import {
 } from "@/modules/tutors/tutor.service";
 import { createTutorSchema } from "@/modules/tutors/tutor.validation";
 import { requireAdmin } from "@/lib/auth/current-user";
+import { requireSameOrigin } from "@/lib/security/request-origin";
 
 export async function GET() {
   try {
@@ -19,6 +20,7 @@ export async function GET() {
 
 export async function POST(request: Request) {
   try {
+    requireSameOrigin(request);
     await requireAdmin();
     const body: unknown = await request.json();
 

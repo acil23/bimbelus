@@ -6,6 +6,7 @@ import {
   programIdSchema,
 } from "@/modules/programs/package.validation";
 import { requireAdmin } from "@/lib/auth/current-user";
+import { requireSameOrigin } from "@/lib/security/request-origin";
 
 type RouteContext = {
   params: Promise<{
@@ -18,6 +19,7 @@ export async function POST(
   { params }: RouteContext,
 ) {
   try {
+    requireSameOrigin(request);
     await requireAdmin();
     const { id } = await params;
 

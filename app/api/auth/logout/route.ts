@@ -7,9 +7,12 @@ import {
   sessionCookieOptions,
 } from "@/lib/auth/cookie";
 import { logout } from "@/modules/auth/auth.service";
+import { requireSameOrigin } from "@/lib/security/request-origin";
 
 export async function POST(request: NextRequest) {
   try {
+    requireSameOrigin(request);
+
     const token = request.cookies.get(
       SESSION_COOKIE_NAME,
     )?.value;

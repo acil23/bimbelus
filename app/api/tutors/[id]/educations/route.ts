@@ -4,6 +4,7 @@ import { createEducation } from "@/modules/tutors/education.service";
 import { tutorIdSchema } from "@/modules/tutors/tutor.validation";
 import { createEducationSchema } from "@/modules/tutors/education.validation";
 import { requireAdmin } from "@/lib/auth/current-user";
+import { requireSameOrigin } from "@/lib/security/request-origin";
 
 type RouteContext = {
   params: Promise<{
@@ -16,6 +17,7 @@ export async function POST(
   { params }: RouteContext,
 ) {
   try {
+    requireSameOrigin(request);
     await requireAdmin();
     const { id } = await params;
 

@@ -2,9 +2,10 @@ import "server-only";
 import { createHash, randomBytes } from "node:crypto";
 import { prisma } from "../db/prisma";
 import { cookies } from "next/headers";
-import { SESSION_COOKIE_NAME } from "./constants";
-
-const SESSION_LIFETIME_MS = 7 * 24 * 60 * 60 * 1000;
+import {
+  SESSION_COOKIE_NAME,
+  SESSION_MAX_AGE_SECONDS,
+} from "./constants";
 
 export function generateSessionToken(): string {
   return randomBytes(32).toString("base64url");
@@ -21,7 +22,10 @@ export async function createSession(userId: string): Promise<{
   const token = generateSessionToken();
   const tokenHash = hashSessionToken(token);
 
-  const expiresAt = new Date(Date.now() + SESSION_LIFETIME_MS);
+  const expiresAt = new Date(
+    Date.now() +
+    SESSION_MAX_AGE_SECONDS * 1000,
+  );
 
   await prisma.session.create({
     data: {
@@ -45,7 +49,14 @@ export async function getSession(token: string) {
       tokenHash,
     },
     include: {
-      user: true,
+      user: {
+        select: {
+          id: true,
+          name: true,
+          email: true,
+          role: true,
+        },
+      },
     },
   });
 
@@ -54,7 +65,7 @@ export async function getSession(token: string) {
   }
 
   if (session.expiresAt <= new Date()) {
-    await prisma.session.delete({
+    await prisma.session.deleteMany({
       where: {
         id: session.id,
       },

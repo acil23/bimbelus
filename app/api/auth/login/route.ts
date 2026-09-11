@@ -9,9 +9,16 @@ import {
 } from "@/lib/auth/cookie";
 import { login } from "@/modules/auth/auth.service";
 import { loginSchema } from "@/modules/auth/auth.validation";
+import { getClientIp } from "@/lib/security/request-ip";
+import {
+  checkLoginRateLimit,
+  clearLoginRateLimit,
+} from "@/lib/security/rate-limit";
+import { requireSameOrigin } from "@/lib/security/request-origin";
 
 export async function POST(request: Request) {
   try {
+    requireSameOrigin(request);
     let body: unknown;
 
     try {
@@ -26,6 +33,22 @@ export async function POST(request: Request) {
 
     const input = loginSchema.parse(body);
 
+    const clientIp = getClientIp(request);
+
+    const rateLimitResult =
+      checkLoginRateLimit(
+        clientIp,
+        input.email,
+      );
+
+    if (!rateLimitResult.allowed) {
+      return errorResponse(
+        "TOO_MANY_REQUESTS",
+        "Too many login attempts. Please try again later.",
+        429,
+      );
+    }
+
     const result = await login(
       input.email,
       input.password,
@@ -38,6 +61,8 @@ export async function POST(request: Request) {
         401,
       );
     }
+
+    clearLoginRateLimit(input.email);
 
     const response = successResponse(
       {
@@ -58,7 +83,7 @@ export async function POST(request: Request) {
         Math.floor(
           (result.session.expiresAt.getTime() -
             Date.now()) /
-            1000,
+          1000,
         ),
       ),
     });

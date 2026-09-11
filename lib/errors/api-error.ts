@@ -5,7 +5,8 @@ export type ApiErrorCode =
   | "NOT_FOUND"
   | "CONFLICT"
   | "DATABASE_ERROR"
-  | "INTERNAL_ERROR";
+  | "INTERNAL_ERROR"
+  | "TOO_MANY_REQUESTS";
 
 export class ApiError extends Error {
   constructor(

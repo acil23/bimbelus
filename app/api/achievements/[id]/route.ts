@@ -11,6 +11,7 @@ import {
   updateAchievementSchema,
 } from "@/modules/achievements/achievement.validation";
 import { requireAdmin } from "@/lib/auth/current-user";
+import { requireSameOrigin } from "@/lib/security/request-origin";
 
 type RouteContext = {
   params: Promise<{
@@ -48,6 +49,7 @@ export async function PATCH(
   { params }: RouteContext,
 ) {
   try {
+    requireSameOrigin(request);
     await requireAdmin();
     const { id } = await params;
 
@@ -85,6 +87,7 @@ export async function DELETE(
   { params }: RouteContext,
 ) {
   try {
+    requireSameOrigin(_request);
     await requireAdmin();
     const { id } = await params;
 
