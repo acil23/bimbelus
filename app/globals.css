@@ -1,26 +1,90 @@
+/* Global Styles -- app/globals.css */
+
 @import "tailwindcss";
 
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  /* Brand palette, drawn from the Bimbel YS mark */
+  --color-espresso: #3b2618; /* deep brown — headings, dark surfaces */
+  --color-bark: #6b4127; /* mid brown — secondary text, borders */
+  --color-lagoon: #1e7c93; /* teal — links, primary interactive */
+  --color-lagoon-dark: #145b6c;
+  --color-mist: #eaf4f6; /* pale teal — alt section background */
+  --color-marigold: #efa22b; /* gold — accents, primary CTA */
+  --color-marigold-dark: #d68a17;
+  --color-paper: #fbf8f3; /* warm off-white — default background */
+  --color-paper-dim: #f3ede2;
 }
 
 @theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+  --color-espresso: var(--color-espresso);
+  --color-bark: var(--color-bark);
+  --color-lagoon: var(--color-lagoon);
+  --color-lagoon-dark: var(--color-lagoon-dark);
+  --color-mist: var(--color-mist);
+  --color-marigold: var(--color-marigold);
+  --color-marigold-dark: var(--color-marigold-dark);
+  --color-paper: var(--color-paper);
+  --color-paper-dim: var(--color-paper-dim);
+
+  --font-display: var(--font-display);
+  --font-body: var(--font-body);
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+* {
+  border-color: var(--color-paper-dim);
 }
 
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  background: var(--color-paper);
+  color: var(--color-espresso);
+}
+
+h1,
+h2,
+h3,
+h4 {
+  font-family: var(--font-display);
+  letter-spacing: -0.01em;
+}
+
+::selection {
+  background: var(--color-marigold);
+  color: var(--color-espresso);
+}
+
+/* Visible keyboard focus, kept consistent across custom components */
+a:focus-visible,
+button:focus-visible {
+  outline: 2px solid var(--color-lagoon);
+  outline-offset: 3px;
+  border-radius: 4px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+/* One-off draw-in for the hero growth mark; respects reduced-motion above */
+@keyframes draw-path {
+  from {
+    stroke-dashoffset: 1;
+  }
+  to {
+    stroke-dashoffset: 0;
+  }
+}
+
+/* Use together with the SVG attribute pathLength="1" so dasharray/offset
+   don't need to be measured by hand. */
+.draw-in {
+  stroke-dasharray: 1;
+  stroke-dashoffset: 1;
+  animation: draw-path 1.3s 0.4s cubic-bezier(0.65, 0, 0.35, 1) forwards;
 }
