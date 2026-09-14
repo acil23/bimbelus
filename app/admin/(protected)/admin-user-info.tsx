@@ -1,57 +1,9 @@
-// app/admin/%28protected%29/admin-user-info.tsx --- IGNORE ---
-
 "use client";
-
-import { useEffect, useState } from "react";
-
-import {
-  getCurrentUser,
-  type AuthUser,
-} from "@/lib/api/auth";
-
+import { useEffect,useState } from "react";
+import { getCurrentUser,type AuthUser } from "@/lib/api/auth";
+import { initials } from "@/lib/ui/format";
 export default function AdminUserInfo() {
-  const [user, setUser] = useState<AuthUser | null>(
-    null,
-  );
-
-  useEffect(() => {
-    let isMounted = true;
-
-    async function loadUser() {
-      try {
-        const currentUser =
-          await getCurrentUser();
-
-        if (isMounted) {
-          setUser(currentUser);
-        }
-      } catch {
-        if (isMounted) {
-          setUser(null);
-        }
-      }
-    }
-
-    loadUser();
-
-    return () => {
-      isMounted = false;
-    };
-  }, []);
-
-  if (!user) {
-    return null;
-  }
-
-  return (
-    <div className="hidden text-right sm:block">
-      <p className="text-sm font-medium">
-        {user.name}
-      </p>
-
-      <p className="text-xs text-zinc-500">
-        {user.email}
-      </p>
-    </div>
-  );
+ const [user,setUser] = useState<AuthUser | null>(null);
+ useEffect(()=>{let mounted=true;async function load(){try {const current=await getCurrentUser();if(mounted)setUser(current);} catch {if(mounted)setUser(null);}}void load();return()=>{mounted=false;};},[]);
+ return <div className="admin-user"><span className="avatar" aria-hidden="true">{user ? initials(user.name) : "YS"}</span><div><strong className="small">{user?.name ?? "Admin Bimbel YS"}</strong><small>{user?.email ?? "Content Studio"}</small></div></div>;
 }
