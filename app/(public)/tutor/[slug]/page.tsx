@@ -5,8 +5,114 @@ import { getTutorBySlug } from "@/lib/api/tutors";
 import { PageIntro } from "@/components/ui/page-intro";
 import { Media } from "@/components/ui/media";
 import { EmptyState } from "@/components/ui/empty-state";
-export default async function TutorDetailPage({ params }: { params: Promise<{ slug: string }> }) {
- const { slug } = await params; let tutor;
- try { tutor = await getTutorBySlug(slug); } catch(error) { if(error instanceof ApiClientError && error.status === 404) notFound(); throw error; }
- return <><PageIntro eyebrow="Profil tutor" title={tutor.name} description={[tutor.title,tutor.specialization].filter(Boolean).join(" · ")} /><section className="section container detail-grid"><div className="stack"><Link href="/tutor" className="text-link">← Semua tutor</Link>{tutor.bio && <article className="card rich-panel"><h2>Mengenal {tutor.name}</h2><p className="pre-line muted">{tutor.bio}</p></article>}<section className="card rich-panel"><h2>Pendidikan</h2>{tutor.tutor_educations.length ? <div className="timeline">{tutor.tutor_educations.map((item) => <article key={item.id}><h3>{item.institution}</h3>{item.field_of_study && <p>{item.field_of_study}</p>}{(item.start_year != null || item.end_year != null) && <p className="small muted">{item.start_year ?? "—"} – {item.end_year ?? "Sekarang"}</p>}{item.description && <p className="pre-line muted">{item.description}</p>}</article>)}</div> : <EmptyState title="Riwayat pendidikan belum tersedia" />}</section><section className="card rich-panel"><h2>Pengalaman</h2>{tutor.tutor_experiences.length ? <div className="timeline">{tutor.tutor_experiences.map((item) => <article key={item.id}><h3>{item.organization}</h3>{item.position && <p>{item.position}</p>}{(item.start_year != null || item.end_year != null) && <p className="small muted">{item.start_year ?? "—"} – {item.end_year ?? "Sekarang"}</p>}{item.description && <p className="pre-line muted">{item.description}</p>}</article>)}</div> : <EmptyState title="Riwayat pengalaman belum tersedia" />}</section></div><aside className="detail-aside"><Media src={tutor.photo_url} alt={tutor.name} className="media-square" /><div className="card rich-panel stack"><h3>Belajar bersama Bimbel YS</h3><p className="muted">Hubungi tim kami untuk informasi program dan jadwal belajar.</p><Link href="/contact" className="btn btn-gold">Konsultasikan kebutuhanmu</Link></div></aside></section></>;
+
+export default async function TutorDetailPage({
+  params,
+}: {
+  params: Promise<{ slug: string }>;
+}) {
+  const { slug } = await params;
+
+  let tutor;
+
+  try {
+    tutor = await getTutorBySlug(slug);
+  } catch (error) {
+    if (error instanceof ApiClientError && error.status === 404) {
+      notFound();
+    }
+
+    throw error;
+  }
+
+  const tutorDescription = [tutor.title, tutor.specialization]
+    .filter(Boolean)
+    .join(" · ");
+
+  const renderEducations = tutor.tutor_educations.length ? (
+    <div className="timeline">
+      {tutor.tutor_educations.map((item) => (
+        <article key={item.id}>
+          <h3>{item.institution}</h3>
+          {item.field_of_study && <p>{item.field_of_study}</p>}
+          {(item.start_year != null || item.end_year != null) && (
+            <p className="small muted">
+              {item.start_year ?? "—"} – {item.end_year ?? "Sekarang"}
+            </p>
+          )}
+          {item.description && <p className="pre-line muted">{item.description}</p>}
+        </article>
+      ))}
+    </div>
+  ) : (
+    <EmptyState title="Riwayat pendidikan belum tersedia" />
+  );
+
+  const renderExperiences = tutor.tutor_experiences.length ? (
+    <div className="timeline">
+      {tutor.tutor_experiences.map((item) => (
+        <article key={item.id}>
+          <h3>{item.organization}</h3>
+          {item.position && <p>{item.position}</p>}
+          {(item.start_year != null || item.end_year != null) && (
+            <p className="small muted">
+              {item.start_year ?? "—"} – {item.end_year ?? "Sekarang"}
+            </p>
+          )}
+          {item.description && <p className="pre-line muted">{item.description}</p>}
+        </article>
+      ))}
+    </div>
+  ) : (
+    <EmptyState title="Riwayat pengalaman belum tersedia" />
+  );
+
+  return (
+    <>
+      <PageIntro
+        eyebrow="Profil tutor"
+        title={tutor.name}
+        description={tutorDescription}
+      />
+
+      <section className="section container detail-grid">
+        <div className="stack">
+          <Link href="/tutor" className="text-link">
+            ← Semua tutor
+          </Link>
+
+          {tutor.bio && (
+            <article className="card rich-panel">
+              <h2>Mengenal {tutor.name}</h2>
+              <p className="pre-line muted">{tutor.bio}</p>
+            </article>
+          )}
+
+          <section className="card rich-panel">
+            <h2>Pendidikan</h2>
+            {renderEducations}
+          </section>
+
+          <section className="card rich-panel">
+            <h2>Pengalaman</h2>
+            {renderExperiences}
+          </section>
+        </div>
+
+        <aside className="detail-aside">
+          <Media src={tutor.photo_url} alt={tutor.name} className="media-square" />
+
+          <div className="card rich-panel stack">
+            <h3>Belajar bersama Bimbel YS</h3>
+            <p className="muted">
+              Hubungi tim kami untuk informasi program dan jadwal belajar.
+            </p>
+            <Link href="/contact" className="btn btn-gold">
+              Konsultasikan kebutuhanmu
+            </Link>
+          </div>
+        </aside>
+      </section>
+    </>
+  );
 }
