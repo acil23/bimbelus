@@ -4,7 +4,25 @@ import { webUrl, whatsappUrl } from "@/lib/ui/format";
 import { PageIntro } from "@/components/ui/page-intro";
 import { EmptyState } from "@/components/ui/empty-state";
 
-export const metadata = { title: "Kontak & Lokasi" };
+import type { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: "Kontak Bimbel YS | Sungai Kambut & Sungai Duo",
+  description:
+    "Temukan informasi kontak dan lokasi Bimbel YS di Sungai Kambut dan Sungai Duo, Dharmasraya.",
+  alternates: {
+    canonical: "/contact",
+  },
+  openGraph: {
+    title: "Kontak Bimbel YS | Sungai Kambut & Sungai Duo",
+    description:
+      "Temukan informasi kontak dan lokasi Bimbel YS di Sungai Kambut dan Sungai Duo, Dharmasraya.",
+    url: "/contact",
+    type: "website",
+    locale: "id_ID",
+    siteName: "Bimbel YS",
+  },
+};
 
 export default async function ContactPage() {
   const contact = await getContact();
@@ -78,9 +96,19 @@ export default async function ContactPage() {
         const phoneHref = location.phone
           ? `tel:${location.phone.replace(/[^+\d]/g, "")}`
           : undefined;
+        const locationId =
+          location.label?.toLowerCase().includes("sungai kambut")
+            ? "sungai-kambut"
+            : location.label?.toLowerCase().includes("sungai duo")
+              ? "sungai-duo"
+              : undefined;
 
         return (
-          <article className="card contact-card" key={location.id}>
+          <article
+            className="card contact-card"
+            key={location.id}
+            id={locationId}
+          >
             <h3>{location.label || "Cabang Bimbel YS"}</h3>
 
             <div className="contact-row">
@@ -141,6 +169,15 @@ export default async function ContactPage() {
         eyebrow="Kontak"
         title="Mari bicarakan langkah belajarmu."
         description="Tanyakan program, jadwal, dan pilihan lokasi. Kami siap membantu menemukan informasi yang kamu butuhkan."
+        breadcrumbs={[
+          {
+            label: "Beranda",
+            href: "/",
+          },
+          {
+            label: "Kontak",
+          },
+        ]}
       />
 
       <section className="section container stack">

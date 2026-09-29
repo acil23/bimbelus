@@ -5,6 +5,49 @@ import { getTutorBySlug } from "@/lib/api/tutors";
 import { PageIntro } from "@/components/ui/page-intro";
 import { Media } from "@/components/ui/media";
 import { EmptyState } from "@/components/ui/empty-state";
+import type { Metadata } from "next";
+
+type Props = {
+  params: Promise<{
+    slug: string;
+  }>;
+};
+
+export async function generateMetadata({
+  params,
+}: Props): Promise<Metadata> {
+  const { slug } = await params;
+
+  try {
+    const tutor = await getTutorBySlug(slug);
+
+    const description =
+      tutor.bio ??
+      `Profil ${tutor.name}, tutor Bimbel YS.`;
+
+    return {
+      title: `${tutor.name} | Tutor Bimbel YS`,
+      description,
+      alternates: {
+        canonical: `/tutor/${tutor.slug}`,
+      },
+      openGraph: {
+        title: `${tutor.name} | Tutor Bimbel YS`,
+        description,
+        url: `/tutor/${tutor.slug}`,
+        type: "profile",
+        locale: "id_ID",
+        siteName: "Bimbel YS",
+      },
+    };
+  } catch {
+    return {
+      title: "Tutor Bimbel YS",
+      description:
+        "Profil tutor dan pengajar Bimbel YS.",
+    };
+  }
+}
 
 export default async function TutorDetailPage({
   params,
@@ -73,6 +116,19 @@ export default async function TutorDetailPage({
         eyebrow="Profil tutor"
         title={tutor.name}
         description={tutorDescription}
+        breadcrumbs={[
+          {
+            label: "Beranda",
+            href: "/",
+          },
+          {
+            label: "Tutor",
+            href: "/tutor",
+          },
+          {
+            label: tutor.name,
+          },
+        ]}
       />
 
       <section className="section container detail-grid">

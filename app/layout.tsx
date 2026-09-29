@@ -9,12 +9,17 @@ const jakarta = Plus_Jakarta_Sans({
 });
 
 export const metadata: Metadata = {
+  metadataBase: new URL("https://bimbelys.me"),
+
   title: {
-    default: "Bimbel YS — Belajar Terarah, Melangkah Lebih Jauh",
+    default: "Bimbel YS | Bimbingan Belajar di Dharmasraya",
     template: "%s | Bimbel YS",
   },
+
   description:
-    "Temukan program bimbingan belajar, kenali tutor, dan lihat perjalanan prestasi siswa Bimbel YS.",
+    "Bimbel YS menyediakan program bimbingan belajar untuk siswa SD, SMP, SMA, olimpiade, dan persiapan pendidikan di Dharmasraya.",
+
+  applicationName: "Bimbel YS",
 };
 
 export default function RootLayout({

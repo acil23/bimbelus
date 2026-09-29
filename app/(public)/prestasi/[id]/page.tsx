@@ -6,6 +6,61 @@ import { achievementLabels } from "@/lib/ui/format";
 import { PageIntro } from "@/components/ui/page-intro";
 import { Media } from "@/components/ui/media";
 import { CtaBand } from "@/components/site/cta-band";
+import type { Metadata } from "next";
+
+type Props = {
+  params: Promise<{
+    id: string;
+  }>;
+};
+
+export async function generateMetadata({
+  params,
+}: Props): Promise<Metadata> {
+  const { id } = await params;
+
+  try {
+    const achievement = await getAchievementById(id);
+
+    const title = `${achievement.title} — ${achievement.student_name}`;
+
+    const description = [
+      achievement.title,
+      achievement.student_name,
+      achievement.student_school,
+      achievement.destination,
+      achievement.subject,
+    ]
+      .filter(Boolean)
+      .join(" • ");
+
+    return {
+      title,
+      description:
+        description ||
+        `Prestasi siswa ${achievement.student_name} di Bimbel YS.`,
+      alternates: {
+        canonical: `/prestasi/${achievement.id}`,
+      },
+      openGraph: {
+        title,
+        description:
+          description ||
+          `Prestasi siswa ${achievement.student_name} di Bimbel YS.`,
+        url: `/prestasi/${achievement.id}`,
+        type: "website",
+        locale: "id_ID",
+        siteName: "Bimbel YS",
+      },
+    };
+  } catch {
+    return {
+      title: "Prestasi Siswa Bimbel YS",
+      description:
+        "Prestasi dan pencapaian siswa Bimbel YS.",
+    };
+  }
+}
 
 export default async function AchievementDetailPage({
   params,
@@ -49,6 +104,19 @@ export default async function AchievementDetailPage({
         eyebrow="Cerita prestasi"
         title={achievement.title}
         description={achievement.student_name}
+        breadcrumbs={[
+          {
+            label: "Beranda",
+            href: "/",
+          },
+          {
+            label: "Prestasi",
+            href: "/prestasi",
+          },
+          {
+            label: achievement.title,
+          },
+        ]}
       />
 
       <section className="section container detail-grid">

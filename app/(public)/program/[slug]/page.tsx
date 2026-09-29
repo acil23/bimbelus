@@ -12,6 +12,50 @@ import {
 import { PageIntro } from "@/components/ui/page-intro";
 import { Media } from "@/components/ui/media";
 import { EmptyState } from "@/components/ui/empty-state";
+import type { Metadata } from "next";
+import { Breadcrumbs } from "@/components/site/breadcrumbs";
+
+type Props = {
+  params: Promise<{
+    slug: string;
+  }>;
+};
+
+export async function generateMetadata({
+  params,
+}: Props): Promise<Metadata> {
+  const { slug } = await params;
+
+  try {
+    const program = await getProgramBySlug(slug);
+
+    const description =
+      program.description ??
+      `${program.name} dari Bimbel YS untuk siswa di Dharmasraya.`;
+
+    return {
+      title: program.name,
+      description,
+      alternates: {
+        canonical: `/program/${program.slug}`,
+      },
+      openGraph: {
+        title: program.name,
+        description,
+        url: `/program/${program.slug}`,
+        type: "website",
+        locale: "id_ID",
+        siteName: "Bimbel YS",
+      },
+    };
+  } catch {
+    return {
+      title: "Program Bimbel YS",
+      description:
+        "Informasi program bimbingan belajar Bimbel YS di Dharmasraya.",
+    };
+  }
+}
 
 function buildInquiryMessage(programName: string, packageName: string) {
   return `Halo, saya tertarik untuk mendaftar pada program ${programName} Bimbel YS. Saya ingin bertanya mengenai paket ${packageName}. Mohon informasi selengkapnya.`;
@@ -105,6 +149,19 @@ export default async function ProgramDetailPage({
         eyebrow="Detail program"
         title={program.name}
         description={categoryLabels[program.category]}
+        breadcrumbs={[
+          {
+            label: "Beranda",
+            href: "/",
+          },
+          {
+            label: "Program",
+            href: "/program",
+          },
+          {
+            label: program.name,
+          },
+        ]}
       />
 
       <section className="section container detail-grid">

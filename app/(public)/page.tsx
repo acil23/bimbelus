@@ -19,6 +19,7 @@ import { ProgramCard } from "@/components/site/program-card";
 import { TutorCarousel, AchievementMarquee } from "@/components/site/showcases";
 import { CtaBand } from "@/components/site/cta-band";
 import { EmptyState } from "@/components/ui/empty-state";
+import { BusinessStructuredData } from "@/components/seo/business-structured-data";
 
 const benefits = [
   {
@@ -117,6 +118,7 @@ export default async function HomePage() {
 
   return (
     <>
+      <BusinessStructuredData />
       <section className="hero">
         <div className="container hero-grid">
           <div>

@@ -779,6 +779,42 @@ button:disabled {
   text-decoration: underline;
 }
 
+.breadcrumbs-nav {
+  margin-bottom: 1.5rem;
+}
+
+.breadcrumbs-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  font-size: 0.85rem;
+  color: var(--muted);
+}
+
+.breadcrumbs-list li {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.breadcrumbs-list a {
+  color: var(--muted);
+  text-decoration: none;
+  transition: color 0.2s;
+}
+
+.breadcrumbs-list a:hover {
+  color: var(--ink);
+  text-decoration: underline;
+}
+
+.breadcrumbs-list span[aria-hidden] {
+  opacity: 0.5;
+}
+
 .toolbar {
   display: flex;
   align-items: end;
