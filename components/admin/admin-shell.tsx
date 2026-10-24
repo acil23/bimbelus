@@ -11,8 +11,10 @@ import {
   Building2,
   MapPin,
   ExternalLink,
+  Terminal,
 } from "lucide-react";
 import { Media } from "@/components/ui/media";
+import { PageTransition } from "@/components/animations/page-transition";
 
 const navigation = [
   { href: "/admin/dashboard", label: "Dashboard", icon: LayoutDashboard },
@@ -49,6 +51,11 @@ export function AdminShell({
           </span>
         </Link>
 
+        <div className="hidden md:flex items-center gap-2 px-3 py-2 rounded-lg bg-slate-900/80 border border-slate-800/80 font-mono-tech text-xs text-slate-400">
+          <Terminal size={13} className="text-amber-400 shrink-0" aria-hidden="true" />
+          <span className="truncate">ys-studio://{pathname.replace(/^\/admin\/?/, "") || "root"}</span>
+        </div>
+
         <nav className="admin-nav" aria-label="Navigasi admin">
           {navigation.map(({ href, label, icon: Icon }) => (
             <Link
@@ -56,13 +63,14 @@ export function AdminShell({
               href={href}
               aria-current={pathname === href ? "page" : undefined}
             >
-              <Icon size={20} aria-hidden="true" />
-              {label}
+              <Icon size={19} aria-hidden="true" />
+              <span>{label}</span>
             </Link>
           ))}
         </nav>
 
         <p className="admin-sidebar-note">
+          <span className="text-emerald-400 block mb-1">● SESSION ACTIVE</span>
           Kelola cerita, program, dan informasi yang tampil di website Bimbel YS.
         </p>
       </aside>
@@ -85,7 +93,7 @@ export function AdminShell({
         </header>
 
         <main id="admin-content" className="admin-content" tabIndex={-1}>
-          {children}
+          <PageTransition>{children}</PageTransition>
         </main>
       </div>
     </div>

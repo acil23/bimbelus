@@ -1,6 +1,8 @@
 "use client";
 
 import { useId, useState } from "react";
+import { motion, AnimatePresence, useReducedMotion } from "framer-motion";
+import { Search, RotateCcw, BookOpen, Filter } from "lucide-react";
 import type { Achievement, Program, Tutor } from "@/lib/api/types";
 import { categoryLabels, achievementLabels } from "@/lib/ui/format";
 import { ProgramCard } from "./program-card";
@@ -17,6 +19,7 @@ export function Catalog(props: Props) {
   const [search, setSearch] = useState("");
   const [filter, setFilter] = useState("");
   const id = useId();
+  const shouldReduce = useReducedMotion();
 
   const labels =
     props.kind === "programs"
@@ -32,6 +35,8 @@ export function Catalog(props: Props) {
       String(value ?? "").toLocaleLowerCase("id-ID").includes(query),
     );
 
+  const isUnfiltered = !search && !filter;
+
   const cards =
     props.kind === "programs"
       ? props.items
@@ -44,11 +49,24 @@ export function Catalog(props: Props) {
                 categoryLabels[program.category],
               ),
           )
-          .map((program) => <ProgramCard key={program.id} program={program} />)
+          .map((program, idx) => ({
+            key: program.id,
+            wide: isUnfiltered && idx === 0 && props.items.length > 1,
+            node: (
+              <ProgramCard
+                program={program}
+                featured={isUnfiltered && idx === 0 && props.items.length > 1}
+              />
+            ),
+          }))
       : props.kind === "tutors"
         ? props.items
             .filter((tutor) => matches(tutor.name, tutor.specialization, tutor.bio))
-            .map((tutor) => <TutorCard key={tutor.id} tutor={tutor} />)
+            .map((tutor) => ({
+              key: tutor.id,
+              wide: false,
+              node: <TutorCard tutor={tutor} />,
+            }))
         : props.items
             .filter(
               (achievement) =>
@@ -61,9 +79,11 @@ export function Catalog(props: Props) {
                   achievement.year,
                 ),
             )
-            .map((achievement) => (
-              <AchievementTicket key={achievement.id} achievement={achievement} />
-            ));
+            .map((achievement) => ({
+              key: achievement.id,
+              wide: false,
+              node: <AchievementTicket achievement={achievement} />,
+            }));
 
   const searchLabel =
     props.kind === "programs"
@@ -76,20 +96,37 @@ export function Catalog(props: Props) {
 
   return (
     <div>
+      {/* Unified Academic Search & Filter Deck */}
       <div className="toolbar">
         <div className="field search-field">
-          <label htmlFor={id}>Cari {searchLabel}</label>
-          <input
-            id={id}
-            type="search"
-            value={search}
-            onChange={(event) => setSearch(event.target.value)}
-            placeholder="Ketik kata kunci…"
-          />
+          <label htmlFor={id} className="inline-flex items-center gap-2">
+            <BookOpen size={14} className="text-amber-400" aria-hidden="true" />
+            <span>Cari {searchLabel}</span>
+          </label>
+          <div className="relative">
+            <input
+              id={id}
+              type="search"
+              value={search}
+              onChange={(event) => setSearch(event.target.value)}
+              placeholder="Ketik kata kunci pencarian…"
+              className="pl-10"
+            />
+            <Search
+              size={17}
+              aria-hidden="true"
+              className="
+                pointer-events-none absolute left-3.5 top-1/2 -translate-y-1/2
+                text-slate-500
+              "
+            />
+          </div>
         </div>
 
         {(search || filter) && (
-          <button
+          <motion.button
+            whileHover={shouldReduce ? undefined : { scale: 1.02 }}
+            whileTap={shouldReduce ? undefined : { scale: 0.97 }}
             className="btn btn-outline"
             type="button"
             onClick={() => {
@@ -97,33 +134,61 @@ export function Catalog(props: Props) {
               setFilter("");
             }}
           >
+            <RotateCcw size={15} aria-hidden="true" />
             Reset filter
-          </button>
+          </motion.button>
         )}
       </div>
 
-      {Object.keys(labels).length > 0 && (
-        <div className="filter-chips" role="group" aria-label="Filter kategori">
-          {filterOptions.map(([key, label]) => (
-            <button
-              type="button"
-              key={key}
-              className="filter-chip"
-              aria-pressed={filter === key}
-              onClick={() => setFilter(key)}
-            >
-              {label}
-            </button>
-          ))}
-        </div>
-      )}
+      <div className="flex flex-wrap items-center justify-between gap-4 mb-6">
+        {Object.keys(labels).length > 0 ? (
+          <div className="filter-chips !mb-0" role="group" aria-label="Filter kategori">
+            <span className="inline-flex items-center gap-1.5 text-xs font-mono-tech font-bold text-[#4B5563] mr-1">
+              <Filter size={13} className="text-[#2E8BC0]" aria-hidden="true" />
+              Kategori:
+            </span>
+            {filterOptions.map(([key, label]) => (
+              <motion.button
+                whileHover={shouldReduce ? undefined : { y: -1 }}
+                whileTap={shouldReduce ? undefined : { scale: 0.96 }}
+                type="button"
+                key={key}
+                className="filter-chip"
+                aria-pressed={filter === key}
+                onClick={() => setFilter(key)}
+              >
+                {label}
+              </motion.button>
+            ))}
+          </div>
+        ) : (
+          <div />
+        )}
 
-      <p className="results-count" role="status">
-        {cards.length} hasil ditemukan
-      </p>
+        <p className="results-count !mb-0 flex items-center gap-2" role="status">
+          <span className="status-dot" aria-hidden="true" />
+          <span>{cards.length} hasil ditemukan</span>
+        </p>
+      </div>
 
       {cards.length ? (
-        <div className="grid-3">{cards}</div>
+        <motion.div layout={!shouldReduce} className="grid-3">
+          <AnimatePresence mode="popLayout">
+            {cards.map(({ key, wide, node }) => (
+              <motion.div
+                key={key}
+                layout={!shouldReduce}
+                initial={shouldReduce ? undefined : { opacity: 0, scale: 0.96 }}
+                animate={shouldReduce ? undefined : { opacity: 1, scale: 1 }}
+                exit={shouldReduce ? undefined : { opacity: 0, scale: 0.96 }}
+                transition={{ duration: 0.25 }}
+                className={`h-full ${wide ? "md:col-span-2" : ""}`}
+              >
+                {node}
+              </motion.div>
+            ))}
+          </AnimatePresence>
+        </motion.div>
       ) : (
         <EmptyState
           title="Belum ada hasil yang cocok"

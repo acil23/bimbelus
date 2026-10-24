@@ -2,6 +2,7 @@ import { getTutors } from "@/lib/api/tutors";
 import { PageIntro } from "@/components/ui/page-intro";
 import { Catalog } from "@/components/site/catalog";
 import { CtaBand } from "@/components/site/cta-band";
+import { ScrollReveal } from "@/components/animations/scroll-reveal";
 
 import type { Metadata } from "next";
 
@@ -44,10 +45,14 @@ export default async function TutorsPage() {
       />
 
       <section className="section container">
-        <Catalog kind="tutors" items={tutors} />
+        <ScrollReveal>
+          <Catalog kind="tutors" items={tutors} />
+        </ScrollReveal>
       </section>
 
-      <CtaBand />
+      <ScrollReveal>
+        <CtaBand />
+      </ScrollReveal>
     </>
   );
 }

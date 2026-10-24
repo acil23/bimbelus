@@ -1,11 +1,13 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
+import { Trophy } from "lucide-react";
 import { ApiClientError } from "@/lib/api/client";
 import { getAchievementById } from "@/lib/api/achievements";
 import { achievementLabels } from "@/lib/ui/format";
 import { PageIntro } from "@/components/ui/page-intro";
 import { Media } from "@/components/ui/media";
 import { CtaBand } from "@/components/site/cta-band";
+import { ScrollReveal } from "@/components/animations/scroll-reveal";
 import type { Metadata } from "next";
 
 type Props = {
@@ -82,10 +84,10 @@ export default async function AchievementDetailPage({
   }
 
   const facts = [
-    ["Sekolah", achievement.student_school],
-    ["Tujuan", achievement.destination],
-    ["Mata pelajaran", achievement.subject],
-    ["Kompetisi", achievement.competition_name],
+    ["Sekolah Asal", achievement.student_school],
+    ["Tujuan / Capaian", achievement.destination],
+    ["Mata Pelajaran", achievement.subject],
+    ["Nama Kompetisi", achievement.competition_name],
     ["Tingkat", achievement.competition_level],
   ];
 
@@ -93,17 +95,21 @@ export default async function AchievementDetailPage({
     .filter(([, value]) => value)
     .map(([label, value]) => (
       <div className="card rich-panel" key={label}>
-        <dt className="small muted">{label}</dt>
-        <dd style={{ margin: ".5rem 0 0", fontWeight: 750 }}>{value}</dd>
+        <dt className="small muted font-mono-tech text-xs uppercase tracking-wider">
+          {label}
+        </dt>
+        <dd style={{ margin: ".5rem 0 0", fontWeight: 750 }} className="text-[#1F2937]">
+          {value}
+        </dd>
       </div>
     ));
 
   return (
     <>
       <PageIntro
-        eyebrow="Cerita prestasi"
+        eyebrow="Cerita Prestasi Siswa"
         title={achievement.title}
-        description={achievement.student_name}
+        description={`Diraih oleh: ${achievement.student_name}${achievement.student_school ? ` (${achievement.student_school})` : ""}`}
         breadcrumbs={[
           {
             label: "Beranda",
@@ -127,29 +133,53 @@ export default async function AchievementDetailPage({
 
           <div className="actions">
             <span className="badge badge-gold">
+              <Trophy size={13} aria-hidden="true" />
               {achievementLabels[achievement.achievement_type]}
             </span>
 
-            {achievement.year != null && <span className="badge">{achievement.year}</span>}
+            {achievement.year != null && (
+              <span className="badge">Angkatan {achievement.year}</span>
+            )}
           </div>
 
           {achievement.description && (
-            <p className="pre-line lead">{achievement.description}</p>
+            <ScrollReveal>
+              <div className="card overflow-hidden">
+                <div className="terminal-bar">
+                  <span className="inline-flex items-center gap-1.5 text-amber-400">
+                    <Trophy size={13} aria-hidden="true" />
+                    <span>CATATAN PERJALANAN SISWA</span>
+                  </span>
+                  <span>Bimbel YS</span>
+                </div>
+                <div className="rich-panel">
+                  <p className="pre-line lead" style={{ marginTop: 0 }}>
+                    {achievement.description}
+                  </p>
+                </div>
+              </div>
+            </ScrollReveal>
           )}
 
-          <dl className="grid-2">{renderFacts}</dl>
+          <ScrollReveal delay={0.1}>
+            <dl className="grid-2">{renderFacts}</dl>
+          </ScrollReveal>
         </article>
 
-        <aside className="detail-aside">
-          <Media
-            src={achievement.image_url}
-            alt={achievement.student_name}
-            className="media-square"
-          />
-        </aside>
+        <ScrollReveal delay={0.2}>
+          <aside className="detail-aside">
+            <Media
+              src={achievement.image_url}
+              alt={achievement.student_name}
+              className="media-square"
+            />
+          </aside>
+        </ScrollReveal>
       </section>
 
-      <CtaBand />
+      <ScrollReveal>
+        <CtaBand />
+      </ScrollReveal>
     </>
   );
 }

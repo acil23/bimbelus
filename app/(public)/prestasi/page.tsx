@@ -2,6 +2,7 @@ import { getAchievements } from "@/lib/api/achievements";
 import { PageIntro } from "@/components/ui/page-intro";
 import { Catalog } from "@/components/site/catalog";
 import { CtaBand } from "@/components/site/cta-band";
+import { ScrollReveal } from "@/components/animations/scroll-reveal";
 
 import type { Metadata } from "next";
 
@@ -44,10 +45,14 @@ export default async function AchievementsPage() {
       />
 
       <section className="section container">
-        <Catalog kind="achievements" items={achievements} />
+        <ScrollReveal>
+          <Catalog kind="achievements" items={achievements} />
+        </ScrollReveal>
       </section>
 
-      <CtaBand />
+      <ScrollReveal>
+        <CtaBand />
+      </ScrollReveal>
     </>
   );
 }

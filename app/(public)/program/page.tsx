@@ -2,6 +2,7 @@ import { getPrograms } from "@/lib/api/programs";
 import { PageIntro } from "@/components/ui/page-intro";
 import { Catalog } from "@/components/site/catalog";
 import { CtaBand } from "@/components/site/cta-band";
+import { ScrollReveal } from "@/components/animations/scroll-reveal";
 
 import type { Metadata } from "next";
 export const metadata: Metadata = {
@@ -39,6 +40,9 @@ export default async function ProgramsPage() {
       ]}
     />
     <section className="section container">
-      <Catalog kind="programs" items={programs} /></section>
-    <CtaBand title="Masih mencari program yang tepat?" /></>;
+      <ScrollReveal>
+        <Catalog kind="programs" items={programs} />
+      </ScrollReveal>
+    </section>
+    <ScrollReveal><CtaBand title="Masih mencari program yang tepat?" /></ScrollReveal></>;
 }

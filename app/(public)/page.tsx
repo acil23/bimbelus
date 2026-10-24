@@ -1,259 +1,164 @@
 import Link from "next/link";
-import {
-  ArrowRight,
-  BookOpen,
-  Compass,
-  Users,
-  Trophy,
-  CheckCircle,
-} from "lucide-react";
-import { getCompany } from "@/lib/api/company";
+import { ArrowRight, CheckCircle2 } from "lucide-react";
 import { getPrograms } from "@/lib/api/programs";
 import { getTutors } from "@/lib/api/tutors";
 import { getAchievements } from "@/lib/api/achievements";
-import { getContact } from "@/lib/api/contact";
-import { whatsappUrl } from "@/lib/ui/format";
 import { HeroMark } from "@/components/site/hero-mark";
-import { SectionHeading } from "@/components/site/section-heading";
+import { HeroActions } from "@/components/site/hero-actions";
+import { ClayFeatures } from "@/components/site/clay-features";
 import { ProgramCard } from "@/components/site/program-card";
 import { TutorCarousel, AchievementMarquee } from "@/components/site/showcases";
-import { CtaBand } from "@/components/site/cta-band";
-import { EmptyState } from "@/components/ui/empty-state";
+import { AchievementsStairs } from "@/components/site/achievements-stairs";
 import { BusinessStructuredData } from "@/components/seo/business-structured-data";
-
-const benefits = [
-  {
-    icon: Compass,
-    title: "Temukan arah belajarmu",
-    text: "Pilih program sesuai kebutuhan dan tujuan yang ingin kamu capai.",
-  },
-  {
-    icon: Users,
-    title: "Kenali pendampingmu",
-    text: "Pelajari spesialisasi, pendidikan, dan pengalaman tutor sebelum memilih.",
-  },
-  {
-    icon: BookOpen,
-    title: "Pilihan yang jelas",
-    text: "Bandingkan paket, durasi, dan biaya belajar secara terbuka.",
-  },
-  {
-    icon: Trophy,
-    title: "Terinspirasi untuk maju",
-    text: "Temukan semangat baru dari perjalanan dan pencapaian siswa kami.",
-  },
-];
+import { ScrollReveal } from "@/components/animations/scroll-reveal";
+import { StaggerContainer, StaggerItem } from "@/components/animations/stagger-container";
 
 export default async function HomePage() {
-  const [company, programs, tutors, achievements, contact] = await Promise.all([
-    getCompany(),
+  const [programs, tutors, achievements] = await Promise.all([
     getPrograms(),
     getTutors(),
     getAchievements(),
-    getContact(),
   ]);
-
-  const whatsapp = contact.contact_locations
-    .map((location) => whatsappUrl(location.whatsapp))
-    .find(Boolean);
 
   const highlights = [...achievements]
     .sort((a, b) => Number(b.is_featured) - Number(a.is_featured))
     .slice(0, 12);
 
-  const renderProgramCards = programs.length ? (
-    <div className="grid-3">
-      {programs.slice(0, 3).map((program) => (
-        <ProgramCard key={program.id} program={program} />
-      ))}
-    </div>
-  ) : (
-    <EmptyState
-      title="Program segera tersedia"
-      description="Hubungi kami untuk informasi program belajar."
-    />
-  );
-
-  const renderBenefitCards = (
-    <div className="grid-4">
-      {benefits.map(({ icon: Icon, title, text }) => (
-        <article className="card feature-card" key={title}>
-          <span className="feature-icon">
-            <Icon size={24} aria-hidden="true" />
-          </span>
-          <h3>{title}</h3>
-          <p>{text}</p>
-        </article>
-      ))}
-    </div>
-  );
-
-  const renderAboutCards = (
-    <div className="stack">
-      {company.vision && (
-        <article className="card rich-panel">
-          <h3>Visi kami</h3>
-          <p className="pre-line muted" style={{ marginTop: "1rem" }}>
-            {company.vision}
-          </p>
-        </article>
-      )}
-
-      {company.mission && (
-        <article className="card rich-panel">
-          <h3>Misi kami</h3>
-          <p className="pre-line muted" style={{ marginTop: "1rem" }}>
-            {company.mission}
-          </p>
-        </article>
-      )}
-
-      {!company.vision && !company.mission && (
-        <p className="lead">
-          {company.description || company.tagline || "Kenali profil dan perjalanan Bimbel YS."}
-        </p>
-      )}
-    </div>
-  );
+  const featuredPrograms = programs.slice(0, 3);
 
   return (
     <>
       <BusinessStructuredData />
+
+      {/* ── B. HERO SECTION (Lompatan Besar untuk Masa Depan Belajarmu + 3D Logo on Podium) ── */}
       <section className="hero">
         <div className="container hero-grid">
-          <div>
-            <span className="eyebrow">{company.name} · Bimbingan Belajar</span>
-            <h1>
-              Belajar terarah.
-              <br />
-              <em>Melangkah lebih jauh.</em>
-            </h1>
-            <p className="lead">
-              {company.tagline || "Setiap impian punya langkah pertama. Mulai perjalanan belajarmu bersama Bimbel YS."}
-            </p>
+          <StaggerContainer
+            className="flex flex-col justify-center"
+            stagger={0.12}
+            delay={0.05}
+          >
+            <StaggerItem>
+              <span className="eyebrow">
+                Bimbel YS · Studio Bimbingan Belajar Modern
+              </span>
+            </StaggerItem>
 
-            {company.description && (
-              <p className="lead clamp-3">{company.description}</p>
-            )}
+            <StaggerItem>
+              <h1 className="hero-heading">
+                Lompatan Besar
+                <br />
+                untuk Masa
+                <br />
+                Depan Belajarmu
+              </h1>
+            </StaggerItem>
 
-            <div className="actions">
-              <Link href="/program" className="btn btn-gold">
-                Lihat Program <ArrowRight size={18} aria-hidden="true" />
-              </Link>
-              <Link href="/contact" className="btn btn-light">
-                Hubungi Kami
+            <StaggerItem>
+              <p className="hero-uppercase-sub">
+                ENABLING STUDENTS TO ADVANCE
+                <br />
+                IN THEIR EDUCATION
+              </p>
+            </StaggerItem>
+
+            <StaggerItem>
+              <HeroActions />
+            </StaggerItem>
+
+            <StaggerItem>
+              <div className="hero-trust-pill">
+                <CheckCircle2 size={17} className="text-[#2E8BC0] shrink-0" aria-hidden="true" />
+                <span>
+                  Pendampingan intensif <strong>SD, SMP, SMA, Olimpiade</strong> &amp;{" "}
+                  <strong>Persiapan Seleksi</strong>
+                </span>
+              </div>
+            </StaggerItem>
+          </StaggerContainer>
+
+          <HeroMark />
+        </div>
+      </section>
+
+      {/* ── C. KEUNGGULAN KAMI (3 Horizontal Claymorphism Cards) ── */}
+      <section className="landing-block">
+        <div className="container">
+          <ScrollReveal>
+            <div className="flex items-center justify-between gap-4 flex-wrap mb-5">
+              <h2 className="landing-block-title !mb-0">KEUNGGULAN KAMI</h2>
+              <Link href="/tentang-kami" className="text-link text-xs">
+                <span>Kenali filosofi belajar kami</span>
+                <ArrowRight size={15} aria-hidden="true" />
               </Link>
             </div>
+          </ScrollReveal>
 
-            <p className="hero-note">
-              <CheckCircle size={18} aria-hidden="true" />
-              Program, tutor, dan informasi belajar dalam satu tempat.
-            </p>
-          </div>
-
-          <HeroMark logo={company.logo_url} />
+          <ClayFeatures />
         </div>
       </section>
 
-      <section className="section section-white">
+      {/* ── D. DAFTAR TUTOR TERPOPULER (Interactive 3-Card Portrait Carousel) ── */}
+      <section className="landing-block">
         <div className="container">
-          <div className="section-head">
-            <SectionHeading
-              eyebrow="Program pilihan"
-              title="Rancang perjalanan belajarmu."
-              description="Temukan program dan paket yang sesuai dengan kebutuhanmu."
-            />
-            <Link className="text-link" href="/program">
-              Semua program <ArrowRight size={18} aria-hidden="true" />
-            </Link>
-          </div>
+          <ScrollReveal>
+            <div className="flex items-center justify-between gap-4 flex-wrap mb-4">
+              <h2 className="landing-block-title !mb-0">DAFTAR TUTOR TERPOPULER</h2>
+              <Link href="/tutor" className="btn btn-glass btn-small">
+                <span>Lihat Semua Tutor ({tutors.length || 3})</span>
+                <ArrowRight size={15} aria-hidden="true" />
+              </Link>
+            </div>
+          </ScrollReveal>
 
-          {renderProgramCards}
+          <ScrollReveal delay={0.1}>
+            <TutorCarousel tutors={tutors} />
+          </ScrollReveal>
         </div>
       </section>
 
-      <section className="section">
-        <div className="container">
-          <div className="section-head">
-            <SectionHeading
-              eyebrow="Mengapa Bimbel YS"
-              title="Lebih dari sekadar tempat belajar."
-              description="Buat keputusan belajar dengan informasi yang jelas dan pendamping yang tepat."
-            />
+      {/* ── PROGRAM BELAJAR PILIHAN (Claymorphism Program Showcase) ── */}
+      {featuredPrograms.length > 0 && (
+        <section className="landing-block">
+          <div className="container">
+            <ScrollReveal>
+              <div className="flex items-center justify-between gap-4 flex-wrap mb-5">
+                <div>
+                  <h2 className="landing-block-title !mb-1">PROGRAM BELAJAR PILIHAN</h2>
+                  <p className="text-sm text-[#4B5563]">
+                    Pilih paket bimbingan belajar sesuai jenjang dan target akademikmu
+                  </p>
+                </div>
+                <Link href="/program" className="btn btn-glass btn-small">
+                  <span>Semua Program ({programs.length})</span>
+                  <ArrowRight size={15} aria-hidden="true" />
+                </Link>
+              </div>
+            </ScrollReveal>
+
+            <StaggerContainer className="grid-3">
+              {featuredPrograms.map((program) => (
+                <StaggerItem key={program.id} className="h-full">
+                  <ProgramCard program={program} />
+                </StaggerItem>
+              ))}
+            </StaggerContainer>
           </div>
-
-          {renderBenefitCards}
-        </div>
-      </section>
-
-      <section className="section section-blue">
-        <div className="container">
-          <div className="section-head">
-            <SectionHeading
-              eyebrow="Tim pengajar"
-              title="Kenali orang di balik proses belajarmu."
-              description="Lihat profil dan latar belakang tutor Bimbel YS."
-            />
-            <Link className="text-link" href="/tutor">
-              Semua tutor <ArrowRight size={18} aria-hidden="true" />
-            </Link>
-          </div>
-
-          <TutorCarousel tutors={tutors} />
-        </div>
-      </section>
-
-      <section className="section section-dark">
-        <div className="container">
-          <div className="section-head">
-            <SectionHeading
-              eyebrow="Jejak prestasi"
-              title="Setiap pencapaian punya cerita."
-              description="Rayakan langkah siswa kami dalam meraih tujuan pendidikan mereka."
-            />
-            <Link className="text-link" href="/prestasi">
-              Semua prestasi <ArrowRight size={18} aria-hidden="true" />
-            </Link>
-          </div>
-
-          <AchievementMarquee achievements={highlights} />
-        </div>
-      </section>
-
-      <section className="section section-white">
-        <div className="container grid-2">
-          <div className="stack">
-            <SectionHeading
-              eyebrow="Tentang kami"
-              title={`Bertumbuh bersama ${company.name}.`}
-              description="Mengenal lebih dekat tujuan dan perjalanan lembaga kami."
-            />
-            <Link href="/tentang-kami" className="text-link">
-              Kenali Bimbel YS <ArrowRight size={18} aria-hidden="true" />
-            </Link>
-          </div>
-
-          {renderAboutCards}
-        </div>
-      </section>
-
-      <CtaBand />
-
-      {whatsapp && (
-        <div
-          className="container actions"
-          style={{ justifyContent: "center", paddingBottom: "3rem" }}
-        >
-          <a
-            href={whatsapp}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="btn btn-outline"
-          >
-            Konsultasi melalui WhatsApp <ArrowRight size={18} aria-hidden="true" />
-          </a>
-        </div>
+        </section>
       )}
+
+      {/* ── E. PRESTASI KAMI (3D Stairs + Counters + Animated Student Achievements Marquee!) ── */}
+      <section className="landing-block landing-block--prestasi">
+        <div className="container space-y-12">
+          <ScrollReveal>
+            <AchievementsStairs />
+          </ScrollReveal>
+
+          <ScrollReveal delay={0.15}>
+            <AchievementMarquee achievements={highlights} />
+          </ScrollReveal>
+        </div>
+      </section>
     </>
   );
 }
