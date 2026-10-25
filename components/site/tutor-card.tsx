@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { Star } from "lucide-react";
+import { GraduationCap, Briefcase, ArrowUpRight } from "lucide-react";
 import type { Tutor } from "@/lib/api/types";
 import { Media } from "@/components/ui/media";
 
@@ -75,10 +75,12 @@ export function TutorCard({
 }) {
   const roleLabel =
     tutor.specialization || tutor.title || "Tutor Bimbel YS";
-  const href =
-    tutor.slug && !tutor.slug.startsWith("demo-")
-      ? `/tutor/${tutor.slug}`
-      : "/tutor";
+  const href = `/tutor/${tutor.slug}`;
+
+  const educationCount = tutor.tutor_educations?.length ?? 0;
+  const experienceCount = tutor.tutor_experiences?.length ?? 0;
+  const primaryEducation = tutor.tutor_educations?.[0]?.institution;
+  const primaryField = tutor.tutor_educations?.[0]?.field_of_study;
 
   return (
     <article
@@ -89,7 +91,7 @@ export function TutorCard({
       {/* Top Floating Badge on Center Active Card */}
       {isActive && (
         <div className="tutor-active-pill" aria-hidden="true">
-          Favorite/Active Tutor
+          Tutor Pilihan
         </div>
       )}
 
@@ -116,58 +118,46 @@ export function TutorCard({
         <p className="tutor-role-text">{roleLabel}</p>
       </div>
 
-      {/* Bottom Skill Stats + 5 Stars + 98% Circular Ring */}
+      {/* Bottom Real Database Qualification & Experience Footer (No Fake Percentages) */}
       <div className="tutor-skill-footer">
-        <div className="tutor-skill-left">
-          <span className="tutor-skill-label">Skill Stats</span>
-          <div className="tutor-stars" aria-label="Rating 5 dari 5 bintang">
-            {[0, 1, 2, 3, 4].map((starIdx) => (
-              <Star
-                key={starIdx}
-                size={15}
-                fill="#F4A261"
-                color="#F4A261"
-                aria-hidden="true"
-              />
-            ))}
+        <div className="tutor-skill-left min-w-0 flex-1">
+          <span className="tutor-skill-label truncate">
+            {primaryEducation || tutor.title || "Profil Akademik"}
+          </span>
+          <div className="flex items-center gap-2.5 flex-wrap text-[11px] font-bold text-[#4B5563] mt-1">
+            {educationCount > 0 || experienceCount > 0 ? (
+              <>
+                <span className="inline-flex items-center gap-1 text-[#2E8BC0]">
+                  <GraduationCap size={13} aria-hidden="true" />
+                  <span>{educationCount} Pendidikan</span>
+                </span>
+                {experienceCount > 0 && (
+                  <span className="inline-flex items-center gap-1 text-[#D97706]">
+                    <Briefcase size={12} aria-hidden="true" />
+                    <span>{experienceCount} Pengalaman</span>
+                  </span>
+                )}
+              </>
+            ) : (
+              <span className="inline-flex items-center gap-1 text-[#2E8BC0] truncate">
+                <GraduationCap size={13} aria-hidden="true" />
+                <span className="truncate">{primaryField || roleLabel}</span>
+              </span>
+            )}
           </div>
         </div>
 
-        {/* 98% Circular Progress Ring */}
-        <div className="tutor-score-ring" aria-label="Skill score 98%">
-          <svg viewBox="0 0 56 56" className="w-14 h-14">
-            <circle
-              cx="28"
-              cy="28"
-              r="22"
-              fill="#FFFFFF"
-              stroke="#E2E8F0"
-              strokeWidth="4.5"
-            />
-            <circle
-              cx="28"
-              cy="28"
-              r="22"
-              fill="none"
-              stroke="#2E8BC0"
-              strokeWidth="4.5"
-              strokeLinecap="round"
-              strokeDasharray="138"
-              strokeDashoffset="8"
-              transform="rotate(-90 28 28)"
-            />
-            <text
-              x="28"
-              y="32"
-              textAnchor="middle"
-              fill="#1F2937"
-              fontSize="12.5"
-              fontWeight="900"
-            >
-              98%
-            </text>
-          </svg>
-        </div>
+        {/* Profile Action Circle */}
+        <Link
+          href={href}
+          className="tutor-score-ring group"
+          aria-label={`Lihat profil lengkap ${tutor.name}`}
+          title={`Lihat profil ${tutor.name}`}
+        >
+          <span className="w-11 h-11 rounded-full bg-white border-2 border-[#56B9EC]/60 shadow-sm grid place-items-center text-[#2E8BC0] group-hover:bg-[#2E8BC0] group-hover:text-white transition-colors">
+            <ArrowUpRight size={18} />
+          </span>
+        </Link>
       </div>
     </article>
   );

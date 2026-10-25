@@ -70,8 +70,9 @@ export default async function HomePage() {
               <div className="hero-trust-pill">
                 <CheckCircle2 size={17} className="text-[#2E8BC0] shrink-0" aria-hidden="true" />
                 <span>
-                  Pendampingan intensif <strong>SD, SMP, SMA, Olimpiade</strong> &amp;{" "}
-                  <strong>Persiapan Seleksi</strong>
+                  Didukung <strong>{tutors.length} Tutor Aktif</strong>,{" "}
+                  <strong>{programs.length} Program Belajar</strong> &amp;{" "}
+                  <strong>{achievements.length} Prestasi Siswa</strong>
                 </span>
               </div>
             </StaggerItem>
@@ -105,7 +106,7 @@ export default async function HomePage() {
             <div className="flex items-center justify-between gap-4 flex-wrap mb-4">
               <h2 className="landing-block-title !mb-0">DAFTAR TUTOR TERPOPULER</h2>
               <Link href="/tutor" className="btn btn-glass btn-small">
-                <span>Lihat Semua Tutor ({tutors.length || 3})</span>
+                <span>Lihat Semua Tutor ({tutors.length})</span>
                 <ArrowRight size={15} aria-hidden="true" />
               </Link>
             </div>
@@ -151,7 +152,11 @@ export default async function HomePage() {
       <section className="landing-block landing-block--prestasi">
         <div className="container space-y-12">
           <ScrollReveal>
-            <AchievementsStairs />
+            <AchievementsStairs
+              achievementsCount={achievements.length}
+              tutorsCount={tutors.length}
+              programsCount={programs.length}
+            />
           </ScrollReveal>
 
           <ScrollReveal delay={0.15}>
