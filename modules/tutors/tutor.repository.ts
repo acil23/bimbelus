@@ -11,7 +11,7 @@ export async function findActiveTutors() {
     include: {
       tutor_educations: {
         orderBy: {
-          display_order: "asc",
+          display_order: "desc",
         },
       },
       tutor_experiences: {
