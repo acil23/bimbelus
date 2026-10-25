@@ -45,9 +45,7 @@ export default async function TutorsPage() {
       />
 
       <section className="section container">
-        <ScrollReveal>
-          <Catalog kind="tutors" items={tutors} />
-        </ScrollReveal>
+        <Catalog kind="tutors" items={tutors} />
       </section>
 
       <ScrollReveal>

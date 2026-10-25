@@ -45,9 +45,7 @@ export default async function AchievementsPage() {
       />
 
       <section className="section container">
-        <ScrollReveal>
-          <Catalog kind="achievements" items={achievements} />
-        </ScrollReveal>
+        <Catalog kind="achievements" items={achievements} />
       </section>
 
       <ScrollReveal>

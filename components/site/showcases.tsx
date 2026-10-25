@@ -202,7 +202,7 @@ export function AchievementMarquee({ achievements }: { achievements: Achievement
           </span>
           <div>
             <strong className="block text-sm font-extrabold text-[#111827]">
-              Hall of Fame &amp; Jejak Keberhasilan Siswa ({achievements.length})
+              Hall of Fame &amp; Jejak Keberhasilan Siswa
             </strong>
             <span className="block text-xs text-[#4B5563]">
               Geser atau arahkan kursor untuk membaca cerita pencapaian siswa kami
@@ -222,7 +222,7 @@ export function AchievementMarquee({ achievements }: { achievements: Achievement
           </button>
 
           <Link href="/prestasi" className="btn btn-glass btn-small">
-            <span>Semua Prestasi ({achievements.length})</span>
+            <span>Semua Prestasi</span>
             <ArrowRight size={15} aria-hidden="true" />
           </Link>
         </div>

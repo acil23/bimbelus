@@ -137,7 +137,7 @@ export function ClayFeatures() {
       variants={shouldReduce ? undefined : containerSpringVariants}
       initial={shouldReduce ? undefined : "hidden"}
       whileInView={shouldReduce ? undefined : "visible"}
-      viewport={{ once: true, margin: "-40px 0px -40px 0px", amount: 0.15 }}
+      viewport={{ once: true, amount: "some" }}
     >
       {keunggulanCards.map((item) => {
         const Icon = item.icon;

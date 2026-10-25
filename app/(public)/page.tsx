@@ -70,9 +70,8 @@ export default async function HomePage() {
               <div className="hero-trust-pill">
                 <CheckCircle2 size={17} className="text-[#2E8BC0] shrink-0" aria-hidden="true" />
                 <span>
-                  Didukung <strong>{tutors.length} Tutor Aktif</strong>,{" "}
-                  <strong>{programs.length} Program Belajar</strong> &amp;{" "}
-                  <strong>{achievements.length} Prestasi Siswa</strong>
+                  Pendampingan intensif <strong>SD, SMP, SMA, Olimpiade</strong> &amp;{" "}
+                  <strong>Persiapan Seleksi</strong>
                 </span>
               </div>
             </StaggerItem>
@@ -106,7 +105,7 @@ export default async function HomePage() {
             <div className="flex items-center justify-between gap-4 flex-wrap mb-4">
               <h2 className="landing-block-title !mb-0">DAFTAR TUTOR TERPOPULER</h2>
               <Link href="/tutor" className="btn btn-glass btn-small">
-                <span>Lihat Semua Tutor ({tutors.length})</span>
+                <span>Lihat Semua Tutor</span>
                 <ArrowRight size={15} aria-hidden="true" />
               </Link>
             </div>
@@ -131,7 +130,7 @@ export default async function HomePage() {
                   </p>
                 </div>
                 <Link href="/program" className="btn btn-glass btn-small">
-                  <span>Semua Program ({programs.length})</span>
+                  <span>Semua Program</span>
                   <ArrowRight size={15} aria-hidden="true" />
                 </Link>
               </div>

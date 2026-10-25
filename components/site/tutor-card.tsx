@@ -77,10 +77,9 @@ export function TutorCard({
     tutor.specialization || tutor.title || "Tutor Bimbel YS";
   const href = `/tutor/${tutor.slug}`;
 
-  const educationCount = tutor.tutor_educations?.length ?? 0;
-  const experienceCount = tutor.tutor_experiences?.length ?? 0;
   const primaryEducation = tutor.tutor_educations?.[0]?.institution;
   const primaryField = tutor.tutor_educations?.[0]?.field_of_study;
+  const primaryExperience = tutor.tutor_experiences?.[0]?.organization;
 
   return (
     <article
@@ -118,30 +117,21 @@ export function TutorCard({
         <p className="tutor-role-text">{roleLabel}</p>
       </div>
 
-      {/* Bottom Real Database Qualification & Experience Footer (No Fake Percentages) */}
+      {/* Bottom Real Database Qualification & Experience Footer */}
       <div className="tutor-skill-footer">
         <div className="tutor-skill-left min-w-0 flex-1">
           <span className="tutor-skill-label truncate">
-            {primaryEducation || tutor.title || "Profil Akademik"}
+            {primaryEducation || tutor.title || "Pengajar Akademik"}
           </span>
-          <div className="flex items-center gap-2.5 flex-wrap text-[11px] font-bold text-[#4B5563] mt-1">
-            {educationCount > 0 || experienceCount > 0 ? (
-              <>
-                <span className="inline-flex items-center gap-1 text-[#2E8BC0]">
-                  <GraduationCap size={13} aria-hidden="true" />
-                  <span>{educationCount} Pendidikan</span>
-                </span>
-                {experienceCount > 0 && (
-                  <span className="inline-flex items-center gap-1 text-[#D97706]">
-                    <Briefcase size={12} aria-hidden="true" />
-                    <span>{experienceCount} Pengalaman</span>
-                  </span>
-                )}
-              </>
-            ) : (
-              <span className="inline-flex items-center gap-1 text-[#2E8BC0] truncate">
-                <GraduationCap size={13} aria-hidden="true" />
-                <span className="truncate">{primaryField || roleLabel}</span>
+          <div className="flex items-center gap-2 flex-wrap text-[11px] font-bold text-[#4B5563] mt-1">
+            <span className="inline-flex items-center gap-1 text-[#2E8BC0] truncate">
+              <GraduationCap size={13} aria-hidden="true" className="shrink-0" />
+              <span className="truncate">{primaryField || roleLabel}</span>
+            </span>
+            {primaryExperience && (
+              <span className="inline-flex items-center gap-1 text-[#D97706] truncate">
+                <Briefcase size={12} aria-hidden="true" className="shrink-0" />
+                <span className="truncate">{primaryExperience}</span>
               </span>
             )}
           </div>

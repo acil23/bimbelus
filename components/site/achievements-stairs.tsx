@@ -62,11 +62,12 @@ export function AchievementsStairs({
           THEIR EDUCATION
         </p>
 
-        {/* Real Database Counts: Prestasi Siswa | Total Tutor | Program Belajar */}
+        {/* Real Database Counts with "+" Suffix: Prestasi Siswa | Total Tutor | Program Belajar */}
         <div className="prestasi-big-counters">
           <div className="prestasi-counter-block">
             <Counter
               value={achievementsCount}
+              suffix="+"
               duration={1.8}
               className="prestasi-counter-num"
             />
@@ -78,10 +79,11 @@ export function AchievementsStairs({
           <div className="prestasi-counter-block">
             <Counter
               value={tutorsCount}
+              suffix="+"
               duration={1.8}
               className="prestasi-counter-num"
             />
-            <span className="prestasi-counter-label">Total Tutor</span>
+            <span className="prestasi-counter-label">Tutor Ahli</span>
           </div>
 
           <div className="prestasi-counter-divider" aria-hidden="true" />
@@ -89,6 +91,7 @@ export function AchievementsStairs({
           <div className="prestasi-counter-block">
             <Counter
               value={programsCount}
+              suffix="+"
               duration={1.8}
               className="prestasi-counter-num"
             />

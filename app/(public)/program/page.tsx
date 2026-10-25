@@ -40,9 +40,7 @@ export default async function ProgramsPage() {
       ]}
     />
     <section className="section container">
-      <ScrollReveal>
-        <Catalog kind="programs" items={programs} />
-      </ScrollReveal>
+      <Catalog kind="programs" items={programs} />
     </section>
     <ScrollReveal><CtaBand title="Masih mencari program yang tepat?" /></ScrollReveal></>;
 }

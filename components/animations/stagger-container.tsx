@@ -49,7 +49,7 @@ export function StaggerContainer({
       variants={containerVariants(stagger, delay)}
       initial="hidden"
       whileInView="visible"
-      viewport={{ once, margin: "-40px 0px -40px 0px", amount: 0.15 }}
+      viewport={{ once, amount: "some" }}
     >
       {children}
     </motion.div>

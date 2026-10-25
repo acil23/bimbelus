@@ -12,7 +12,7 @@ type CounterProps = {
 
 export function Counter({ value, suffix = "", duration = 2, className }: CounterProps) {
   const ref = useRef<HTMLSpanElement>(null);
-  const isInView = useInView(ref, { once: true, margin: "-20px 0px -20px 0px", amount: 0.2 });
+  const isInView = useInView(ref, { once: true, amount: "some" });
   const shouldReduce = useReducedMotion();
   const [display, setDisplay] = useState(0);
 
